@@ -1,9 +1,10 @@
-from flask import Flask, request
 from markupsafe import escape #escapar para tratar a todos lo usuarios como "peligroso"
-from flask import url_for
-from flask import render_template
+from flask import Flask, request, render_template, redirect, url_for, session
+import secrets
 
 app = Flask(__name__)
+
+app.secret_key = secrets.token_hex(16)
 
 def valid_login(username, password):
     USER_DATABASE = {
@@ -48,6 +49,8 @@ def about():
 
 @app.get('/login')
 def login_get():
+    if 'username' in session:
+        return render_template('login.html', username=session['username'])
     return render_template('login.html')
 
 
@@ -60,8 +63,15 @@ def login_post():
 
 
     if valid_login(username, password):
-        return render_template('login.html', username=username, password=password)
+            session['username'] = username
+            return render_template('login.html', username=username)
     else:
         error = 'usuario o contrasenia invalida'
         return render_template('login.html', error=error)
-    
+
+
+
+@app.get('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('login_get'))
