@@ -35,24 +35,6 @@ def about():
 
 
 
-@app.route('/')
-def index():
-    return 'index'
-
-
-
-@app.route('/login')
-def login():
-    return 'login'
-
-
-
-@app.route('/user/<username>')
-def profile(username):
-    return f'{username}\'s profile'
-
-
-
 @app.get('/login')
 def login_get():
     return show_the_login_form()
@@ -68,43 +50,66 @@ def login_post():
 
     username = request.form.get("username")
     password = request.form.get("password")
+    css_url = url_for('static', filename='style.css')
 
-    if username in USER_DATABASE:
+
+    if username in USER_DATABASE and USER_DATABASE[username] == password:
         return f"""
-            <h1>Login</h1>
-            <p>Username: {username}</p>
-            <p>Password: {password}</p>
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <title>Fondo Multicolor</title>
+                <link rel="stylesheet" href="{css_url}">
+            </head>
+            <body>  
+                <div class="container">     
+                    <h1>Login</h1>
+                    <p>Username: {username}</p>
+                    <p>Password: {password}</p>
+                </div>
+            </body>
+            </html>
         """
     else:
         return "Fail"
     
 
 def show_the_login_form():
-    return """
-        <h1>Login</h1>
+    css_url = url_for("static", filename="style.css")
+    return f"""
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <title>Login</title>
+            <link rel="stylesheet" href="{css_url}">
+        </head>
+        <body>
+            <form method="POST">
+                <h1>Login</h1>
 
-        <form method="POST">
-            <label>
-                Username:
-                <input type="text" name="username">
-            </label>
+                <label>
+                    Username:
+                    <input type="text" name="username">
+                </label>
 
-            <br><br>
+                <br><br>
 
-            <label>
-                Password:
-                <input type="password" name="password">
-            </label>
+                <label>
+                    Password:
+                    <input type="password" name="password">
+                </label>
 
-            <br><br>
+                <br><br>
 
-            <button type="submit">
-                Login
-            </button>
-        </form>
+                <button type="submit">
+                    Login
+                </button>
+            </form>
+        </body>
+        </html>
     """
-
-
 
 def do_the_login():
     username = request.form.get("username")
