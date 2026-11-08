@@ -1,6 +1,7 @@
-from markupsafe import escape #escapar para tratar a todos lo usuarios como "peligroso"
-from flask import Flask, request, render_template, redirect, url_for, session
 import secrets
+
+from flask import Flask, redirect, render_template, request, session, url_for
+from markupsafe import escape  #escapar para tratar a todos lo usuarios como "peligroso"
 
 app = Flask(__name__)
 
@@ -12,10 +13,7 @@ def valid_login(username, password):
         "user1": "123456"
     }
 
-    if username in USER_DATABASE:
-        if USER_DATABASE[username] == password:
-            return True
-    return False
+    return bool(username in USER_DATABASE and USER_DATABASE[username] == password)
 
 @app.route('/user/<username>')
 def show_user_profile(username):

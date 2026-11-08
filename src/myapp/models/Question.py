@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from Category import Category
+from .Category import Category
 
 
-class Question():
+class Question:
     def __init__(self, title: str, body: str, category: Category):
         self._title = title
         self._body = body
