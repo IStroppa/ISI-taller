@@ -13,6 +13,9 @@
             <p>Password: {{ password }}</p>
         </div>
     {% else %}
+        {% if error %}
+            <p class="error" style="color: red;"><strong>Error:</strong> {{ error }}</p>
+        {% endif %}
         <form method="POST">
             <h1>Login</h1>
 

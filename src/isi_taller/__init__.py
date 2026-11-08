@@ -5,6 +5,16 @@ from flask import render_template
 
 app = Flask(__name__)
 
+def valid_login(username, password):
+    USER_DATABASE = {
+        "admin": "administradorPrincipal",
+        "user1": "123456"
+    }
+
+    if username in USER_DATABASE:
+        if USER_DATABASE[username] == password:
+            return True
+    return False
 
 @app.route('/user/<username>')
 def show_user_profile(username):
@@ -44,17 +54,14 @@ def login_get():
 
 @app.post('/login')
 def login_post():
-    USER_DATABASE = {
-        "admin": "administradorPrincipal",
-        "user1": "123456"
-    }
-
+    error = None 
     username = request.form.get("username")
     password = request.form.get("password")
 
 
-    if username in USER_DATABASE and USER_DATABASE[username] == password:
+    if valid_login(username, password):
         return render_template('login.html', username=username, password=password)
     else:
-        return "Fail"
+        error = 'usuario o contrasenia invalida'
+        return render_template('login.html', error=error)
     
