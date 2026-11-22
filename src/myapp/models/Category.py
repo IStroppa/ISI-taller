@@ -13,10 +13,11 @@ class Category(Base):
     __tablename__ = "categories"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    _name: Mapped[str] = mapped_column("name", String(100), nullable=False, unique=True)
     _questions: Mapped[list["Question"]] = relationship(
         back_populates="_category", cascade="all, delete-orphan"
     )
+
+    _name: Mapped[str] = mapped_column("name", String(100), nullable=False, unique=True)
 
     def __init__(self, name: str):
         self._name = name

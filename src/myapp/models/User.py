@@ -5,23 +5,24 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from ..database import Base
 from .RoleType import RoleType
+from .Author import Author
 
 if TYPE_CHECKING:
     from .Question import Question
     from .Response import Response
 
 
-class User(Base):
+class User(Author, Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     _username: Mapped[str] = mapped_column(
-        "username", String(100), nullable=False, unique=True
+        "username", String(50), nullable=False, unique=True
     )
     _email: Mapped[str] = mapped_column(
-        "email", String(150), nullable=False, unique=True
+        "email", String(100), nullable=False, unique=True
     )
-    _password: Mapped[str] = mapped_column("password", String(200), nullable=False)
+    _password: Mapped[str] = mapped_column("password", String(100), nullable=False)
     _role: Mapped[RoleType] = mapped_column(
         "role", nullable=False, default=RoleType.general_user
     )
@@ -38,18 +39,20 @@ class User(Base):
         self._password = password
         self._role = role
 
-    def get_username(self):
+    def get_username(self) -> str:
         return self._username
 
-    def get_role(self):
+    def get_role(self) -> RoleType:
         return self._role
 
-    def get_id(self):
+    def get_id(self) -> int:
         return self.id
 
+    # Publica una nueva question
     def ask(self, question: "Question"):
         # TODO: implementar ask. Deberia postearse a una lista de preguntas?
         return
 
+    # Añade response a la lista de respuestas de question
     def respond(self, question: "Question", response: "Response"):
         question.add_response(response)
