@@ -5,14 +5,14 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from ..database import Base
 from .RoleType import RoleType
-from .Author import Author
+#from .Author import Author
 
 if TYPE_CHECKING:
     from .Question import Question
     from .Response import Response
 
 
-class User(Author, Base):
+class User(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
