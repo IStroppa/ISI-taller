@@ -22,6 +22,7 @@ class Question(Base):
         "category_id", ForeignKey("categories.id"), nullable=False
     )
     _category: Mapped[Category] = relationship(back_populates="_questions")
+    _responses: Mapped[list[Response]] = relationship(back_populates="_question")
 
     def __init__(self, title: str, body: str, category: Category):
         self._title = title
