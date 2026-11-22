@@ -2,8 +2,12 @@ import secrets
 
 from flask import Flask, redirect, render_template, request, session, url_for
 from markupsafe import escape  #escapar para tratar a todos lo usuarios como "peligroso"
+from sqlalchemy import select
+from werkzeug.security import check_password_hash, generate_password_hash
 
-from myapp.database import close_db, init_db
+from myapp.database import close_db, get_db, init_db
+from myapp.models.RoleType import RoleType
+from myapp.models.User import User
 
 app = Flask(__name__)
 
@@ -14,12 +18,9 @@ app.teardown_appcontext(close_db)
 
 
 def valid_login(username, password):
-    USER_DATABASE = {
-        "admin": "administradorPrincipal",
-        "user1": "123456"
-    }
-
-    return bool(username in USER_DATABASE and USER_DATABASE[username] == password)
+    db = get_db()
+    user = db.scalar(select(User).where(User._username == username))
+    return bool(user and check_password_hash(user._password, password))
 
 @app.route('/user/<username>')
 def show_user_profile(username):
@@ -49,6 +50,32 @@ def projects():
 def about():
     return 'The about page'
 
+
+
+@app.get('/register')
+def register_get():
+    return render_template('register.html')
+
+
+@app.post('/register')
+def register_post():
+    username = request.form.get('username', '').strip()
+    email = request.form.get('email', '').strip()
+    password = request.form.get('password', '')
+
+    if not username or not email or not password:
+        return render_template('register.html', error='Todos los campos son obligatorios')
+
+    db = get_db()
+    if db.scalar(select(User).where(User._username == username)):
+        return render_template('register.html', error='El username ya existe')
+    if db.scalar(select(User).where(User._email == email)):
+        return render_template('register.html', error='El email ya existe')
+
+    user = User(username, email, generate_password_hash(password), RoleType.general_user)
+    db.add(user)
+    db.commit()
+    return redirect(url_for('login_get'))
 
 
 @app.get('/login')

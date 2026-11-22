@@ -1,15 +1,42 @@
+from typing import TYPE_CHECKING
+
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column
+
+from ..database import Base
 from .RoleType import RoleType
-from .Question import Question
-from .Response import Response
 
-class User:
+if TYPE_CHECKING:
+    from .Question import Question
+    from .Response import Response
 
-    def __init__(self, username: str, email: str, password: str, role: RoleType, id: int):
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    _username: Mapped[str] = mapped_column(
+        "username", String(100), nullable=False, unique=True
+    )
+    _email: Mapped[str] = mapped_column(
+        "email", String(150), nullable=False, unique=True
+    )
+    _password: Mapped[str] = mapped_column("password", String(200), nullable=False)
+    _role: Mapped[RoleType] = mapped_column(
+        "role", nullable=False, default=RoleType.general_user
+    )
+
+    def __init__(
+        self,
+        username: str,
+        email: str,
+        password: str,
+        role: RoleType = RoleType.general_user,
+    ):
         self._username = username
         self._email = email
         self._password = password
         self._role = role
-        self.id = id
 
     def get_username(self):
         return self._username
@@ -18,12 +45,11 @@ class User:
         return self._role
 
     def get_id(self):
-        return self._id
+        return self.id
 
-    def ask(question: Question):
-        
+    def ask(self, question: "Question"):
         # TODO: implementar ask. Deberia postearse a una lista de preguntas?
         return
 
-    def respond(question: Question, response: Response):
+    def respond(self, question: "Question", response: "Response"):
         question.add_response(response)

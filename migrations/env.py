@@ -6,6 +6,8 @@ from sqlalchemy import engine_from_config, pool
 from myapp.database import DATABASE_URL, Base
 from myapp.models.Category import Category
 from myapp.models.Question import Question
+from myapp.models.Response import Response
+from myapp.models.User import User
 
 config = context.config
 config.set_main_option("sqlalchemy.url", DATABASE_URL)
@@ -13,7 +15,7 @@ config.set_main_option("sqlalchemy.url", DATABASE_URL)
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-_ = (Category, Question)
+_ = (Category, Question, Response, User)
 
 target_metadata = Base.metadata
 

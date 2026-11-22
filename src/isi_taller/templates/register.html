@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <form method="POST">
+        <h1>Registro</h1>
+
+        {% if error %}
+            <p style="color: red; text-align: center;"><strong>Error:</strong> {{ error }}</p>
+        {% endif %}
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Registrarse</button>
+    </form>
+
+    <p style="text-align: center;">
+        <a href="{{ url_for('login_get') }}">Ya tengo cuenta, ir al login</a>
+    </p>
+</body>
+</html>
