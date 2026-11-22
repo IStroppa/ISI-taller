@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import JSON, DateTime, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -7,6 +8,8 @@ from ..database import Base
 from .Category import Category
 from .Response import Response
 
+if TYPE_CHECKING:
+    from .User import User
 
 class Question(Base):
     __tablename__ = "questions"
@@ -16,6 +19,7 @@ class Question(Base):
     _user_id: Mapped[int] = mapped_column(
         "user_id", ForeignKey("users.id"), nullable=False
     )
+    _user: Mapped["User"] = relationship(back_populates="_questions")
     _category_id: Mapped[int] = mapped_column(
         "category_id", ForeignKey("categories.id"), nullable=False
     )
@@ -32,12 +36,13 @@ class Question(Base):
 
 
 
-    def __init__(self, title: str, body: str, category: Category):
+    def __init__(self, title: str, body: str, category: Category, user: "User"):
         self._title = title
         self._body = body
         self._date = datetime.now()
         self._tags = []
         self._category = category
+        self._user = user
         self._responses = []
 
     # Imprime la pregunta

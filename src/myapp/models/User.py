@@ -1,11 +1,10 @@
 from typing import TYPE_CHECKING
 
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ..database import Base
 from .RoleType import RoleType
-#from .Author import Author
 
 if TYPE_CHECKING:
     from .Question import Question
@@ -26,6 +25,7 @@ class User(Base):
     _role: Mapped[RoleType] = mapped_column(
         "role", nullable=False, default=RoleType.general_user
     )
+    _questions: Mapped[list["Question"]] = relationship(back_populates="_user")
 
     def __init__(
         self,
