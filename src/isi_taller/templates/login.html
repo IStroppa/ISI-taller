@@ -9,9 +9,11 @@
     {% if username %}
         <div class="container">
             <h1>Bienvenido, {{ username }}</h1>
-            <p>Inicio de sesión exitoso usando <strong>session</strong>.</p>
+            <p>Inicio de sesión exitoso.<p>
             <br>
-            <a href="{{ url_for('logout') }}"><button type="button">Cerrar sesión</button></a>
+            <a href="{{ url_for('app_hub') }}"><button type="redirect">Volver a inicio</button></a>
+            <br>
+            <a href="{{ url_for('logout') }}"><button type="crucial">Cerrar sesión</button></a>
         </div>
     {% else %}
         {% if error %}
