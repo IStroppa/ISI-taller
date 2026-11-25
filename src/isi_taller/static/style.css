@@ -136,3 +136,25 @@ button[type="redirect"]:hover {
 button[type="redirect"]:active {
   transform: scale(0.98);
 }
+
+button[type="crucial"] {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.85rem;
+  background-color: var(--accent-color);
+  color: #ff746c;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button[type="crucial"]:hover {
+  background-color: var(--accent-hover);
+}
+
+button[type="crucial"]:active {
+  transform: scale(0.98);
+}
