@@ -2,6 +2,7 @@ import secrets
 
 from flask import Flask, redirect, render_template, request, session, url_for
 from markupsafe import escape  #escapar para tratar a todos lo usuarios como "peligroso"
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import select
 from werkzeug.security import check_password_hash, generate_password_hash
 
