@@ -17,46 +17,27 @@ init_db()
 app.teardown_appcontext(close_db)
 
 
+# Ruta base del sistema. Muestra el "hub" del servidor, con opciones
+# para logearse, registrarse y postear una pregunta con su categoria
+@app.route("/")
+def app_hub():
+    return render_template('hub.html')
+
+
+# Función que define si un login es valido (es decir: el username
+# dado está en el sistema, y la contraseña dada le corresponde)
 def valid_login(username, password):
     db = get_db()
     user = db.scalar(select(User).where(User._username == username))
     return bool(user and check_password_hash(user._password, password))
 
-@app.route('/user/<username>')
-def show_user_profile(username):
-    return f'User {escape(username)}'
-
-
-
-@app.route('/post/<int:post_id>')
-def show_post(post_id):
-    return f'Post {post_id}'
-
-
-
-@app.route('/path/<path:subpath>')
-def show_subpath(subpath):
-    return f'Subpath {escape(subpath)}'
-
-
-
-@app.route('/projects/')
-def projects():
-    return 'The project page'
-
-
-
-@app.route('/about')
-def about():
-    return 'The about page'
-
-
-
+# Muestra el formulario para registrar una cuenta nueva en el sistema
 @app.get('/register')
 def register_get():
     return render_template('register.html')
 
 
+# Envia el formulario para crear una nueva cuenta
 @app.post('/register')
 def register_post():
     username = request.form.get('username', '').strip()
@@ -78,6 +59,7 @@ def register_post():
     return redirect(url_for('login_get'))
 
 
+# Muestra el formulario para iniciar sesion
 @app.get('/login')
 def login_get():
     if 'username' in session:
@@ -85,7 +67,8 @@ def login_get():
     return render_template('login.html')
 
 
-
+# Envia el formulario de login, intenta iniciar sesion
+# y da un error si no se consigue
 @app.post('/login')
 def login_post():
     error = None 
@@ -101,8 +84,32 @@ def login_post():
         return render_template('login.html', error=error)
 
 
-
+# Cierra la sesion abierta del usuario
 @app.get('/logout')
 def logout():
     session.pop('username', None)
     return redirect(url_for('login_get'))
+
+
+
+# Rutas triviales o auxiliares
+
+@app.route('/user/<username>')
+def show_user_profile(username):
+    return f'User {escape(username)}'
+
+@app.route('/post/<int:post_id>')
+def show_post(post_id):
+    return f'Post {post_id}'
+
+@app.route('/path/<path:subpath>')
+def show_subpath(subpath):
+    return f'Subpath {escape(subpath)}'
+
+@app.route('/projects/')
+def projects():
+    return 'The project page'
+
+@app.route('/about')
+def about():
+    return 'The about page'
