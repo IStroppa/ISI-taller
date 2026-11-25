@@ -47,12 +47,7 @@ class User(Base):
 
     def get_id(self) -> int:
         return self.id
-
-    # Publica una nueva question
-    def ask(self, question: "Question"):
-        # TODO: implementar ask. Deberia postearse a una lista de preguntas?
-        return
-
+    
     # Añade response a la lista de respuestas de question
     def respond(self, question: "Question", response: "Response"):
         question.add_response(response)
