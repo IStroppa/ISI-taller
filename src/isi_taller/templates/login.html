@@ -26,12 +26,14 @@
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
 
+            <p style="text-align: center;">
+                <label for="password"></label>
+                <a href="{{ url_for('register_get') }}">Crear una cuenta</a>
+            </p>
+
             <button type="submit">Login</button>
         </form>
 
-        <p style="text-align: center;">
-            <a href="{{ url_for('register_get') }}">Crear cuenta</a>
-        </p>
     {% endif %}
 </body>
 </html>

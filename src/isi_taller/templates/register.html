@@ -22,11 +22,12 @@
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
 
+        <p style="text-align: center;">
+            <label for="username"></label>
+            <a href="{{ url_for('login_get') }}">Ya tengo una cuenta</a>
+        </p>
+        
         <button type="submit">Registrarse</button>
     </form>
-
-    <p style="text-align: center;">
-        <a href="{{ url_for('login_get') }}">Ya tengo cuenta, ir al login</a>
-    </p>
 </body>
 </html>
