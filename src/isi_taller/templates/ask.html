@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Preguntar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% if username %}
+        {% if error %}
+            <p style="color: red; text-align: center;"><strong>Error:</strong> {{ error }}</p>
+        {% endif %}
+    
+        <form method="POST">
+            <h1>Publicar nueva pregunta</h1>
+
+            <a href="{{ url_for('app_hub') }}"><button type="redirect">Volver al inicio</button></a>
+
+            <label for="username">Titulo:</label>
+            <input type="text" id="Title" name="title" required>
+
+            <label for="password">Cuerpo:</label>
+            <input type="text" id="body" name="body" required>
+
+            <label for="password">Categoria:</label>
+            <input type="text" id="category" name="category" required>
+
+            <button type="submit">Publicar</button>
+            
+        </form>
+    {% else %}
+        {% if error %}
+            <p style="color: red; text-align: center;"><strong>Error:</strong> {{ error }}</p>
+        {% endif %}
+        <div class="container">
+            <h1>Acceso no permitido</h1>
+            <p>Debes estar logeado para hacer una pregunta!</p>
+            <br>
+            <a href="{{ url_for('app_hub') }}"><button type="redirect">Volver a inicio</button></a>
+        </div>
+    {% endif %}
+</body>
+</html>
