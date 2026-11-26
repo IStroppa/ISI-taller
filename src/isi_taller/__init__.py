@@ -132,7 +132,11 @@ def ask_post():
     question = Question(title, body, category, user)
     db.add(question)
     db.commit()
-    return redirect(url_for('login_get'))
+    return redirect(url_for('success_question'))
+
+@app.route('/success')
+def success_question():
+    return render_template('success_question')
 
 
 # Rutas triviales o auxiliares
