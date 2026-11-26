@@ -4,4 +4,4 @@ Integrantes: Stroppa Ignacio,
              Facundo Nesci.
 
              
-Nota de la segunda entrega: algunos issues son bastante mas complejos que otros, debido a eso no agregamos el responsable de esos issues ya que se veran en conjunto o de a poco todos participaremos.
+nota: para prender el servidor poner desde la terminal: uv run isi-taller
