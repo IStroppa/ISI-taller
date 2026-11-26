@@ -49,13 +49,29 @@ def test_register_rejects_duplicate_email(client):
     assert b"El email ya existe" in response.data
 
 
+def test_register_and_login_with_special_password(client, db):
+    password = "a&b'c"
+    register(client, password=password)
+
+    user = db.scalar(select(User).where(User._username == "facu"))
+    assert user._username == "facu"
+    assert check_password_hash(user._password, password)
+
+    response = client.post("/login", data={"username": "facu", "password": password})
+    assert response.status_code == 302
+    assert response.headers["Location"].endswith("/")
+
+
 def test_login_with_valid_credentials_sets_session(client):
     register(client)
 
     response = client.post("/login", data={"username": "facu", "password": "secreto"})
 
-    assert response.status_code == 200
-    assert b"Bienvenido, facu" in response.data
+    assert response.status_code == 302
+    assert response.headers["Location"].endswith("/")
+
+    hub = client.get("/")
+    assert b"Bienvenido, facu" in hub.data
     with client.session_transaction() as session:
         assert session["username"] == "facu"
 
@@ -76,6 +92,6 @@ def test_logout_clears_session(client):
     response = client.get("/logout")
 
     assert response.status_code == 302
-    assert response.headers["Location"].endswith("/login")
+    assert response.headers["Location"].endswith("/")
     with client.session_transaction() as session:
         assert "username" not in session
