@@ -100,7 +100,8 @@ def logout():
 def ask_get():
     if 'username' in session:
         return render_template('ask.html', username=session['username'])
-    return render_template('ask.html')
+    else:
+        return render_template('ask.html')
 
 # Con la informacion recibida del formulario, crea una nueva question
 @app.post('/ask')
@@ -132,11 +133,11 @@ def ask_post():
     question = Question(title, body, category, user)
     db.add(question)
     db.commit()
-    return redirect(url_for('success_question'))
+    return redirect(url_for('asksuccess'))
 
-@app.route('/success')
+@app.route('/asksuccess')
 def success_question():
-    return render_template('success_question')
+    return render_template('asksuccess')
 
 
 # Rutas triviales o auxiliares
