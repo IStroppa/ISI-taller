@@ -8,6 +8,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from myapp.database import close_db, get_db, init_db
 from myapp.models.RoleType import RoleType
 from myapp.models.User import User
+from myapp.models.Question import Question
+from myapp.models.Category import Category
 
 app = Flask(__name__)
 
@@ -21,6 +23,8 @@ app.teardown_appcontext(close_db)
 # para logearse, registrarse y postear una pregunta con su categoria
 @app.route("/")
 def app_hub():
+    if 'username' in session:
+        return render_template('hub.html', username=session['username'])
     return render_template('hub.html')
 
 
@@ -90,6 +94,45 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login_get'))
 
+
+# Muestra el formulario para postear una pregunta
+@app.get('/ask')
+def ask_get():
+    if 'username' in session:
+        return render_template('ask.html', username=session['username'])
+    return render_template('ask.html')
+
+# Con la informacion recibida del formulario, crea una nueva question
+@app.post('/ask')
+def ask_post():
+    title = request.form.get('title', '').strip()
+    body = request.form.get('body', '')
+    categoryname = request.form.get('category', '').strip()
+    username = request.form.get('user', '').strip()
+    
+    if not title or not body:
+        return render_template('ask.html', error='Uno o mas campos obligatorios faltantes')
+
+    db = get_db()
+
+    user = db.execute(
+        select(User).where(User._username == username)
+    ).scalar_one_or_none()
+    category = db.execute( 
+        select(Category).where(Category._name == categoryname)
+    ).scalar_one_or_none()
+
+    if not category:
+        category = Category(categoryname)
+        db.add(category)
+        db.commit()
+    if not user:
+        return render_template('ask.html', error='User faltante')
+
+    question = Question(title, body, category, user)
+    db.add(question)
+    db.commit()
+    return redirect(url_for('login_get'))
 
 
 # Rutas triviales o auxiliares
