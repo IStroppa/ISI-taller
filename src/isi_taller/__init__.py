@@ -109,7 +109,6 @@ def ask_post():
     title = request.form.get('title', '').strip()
     body = request.form.get('body', '')
     categoryname = request.form.get('category', '').strip()
-    username = request.form.get('user', '').strip()
     
     if not title or not body:
         return render_template('ask.html', error='Uno o mas campos obligatorios faltantes')
@@ -117,7 +116,7 @@ def ask_post():
     db = get_db()
 
     user = db.execute(
-        select(User).where(User._username == username)
+        select(User).where(User._username == session['username'])
     ).scalar_one_or_none()
     category = db.execute( 
         select(Category).where(Category._name == categoryname)
@@ -136,8 +135,8 @@ def ask_post():
     return redirect(url_for('asksuccess'))
 
 @app.route('/asksuccess')
-def success_question():
-    return render_template('asksuccess')
+def asksuccess():
+    return render_template('asksuccess.html')
 
 
 # Rutas triviales o auxiliares
