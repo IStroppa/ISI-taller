@@ -41,12 +41,12 @@ def register_get():
     return render_template('register.html')
 
 
-# Envia el formulario para crear una nueva cuenta
+# Crea la nueva cuenta con los datos dados, y la guarda en la database
 @app.post('/register')
 def register_post():
-    username = request.form.get('username', '').strip()
-    email = request.form.get('email', '').strip()
-    password = request.form.get('password', '')
+    username = escape(request.form.get("username", '').strip())
+    email = escape(request.form.get("email", '').strip())
+    password = escape(request.form.get("password", ''))
 
     if not username or not email or not password:
         return render_template('register.html', error='Todos los campos son obligatorios')
@@ -76,8 +76,8 @@ def login_get():
 @app.post('/login')
 def login_post():
     error = None 
-    username = request.form.get("username")
-    password = request.form.get("password")
+    username = escape(request.form.get("username"))
+    password = escape(request.form.get("password"))
 
 
     if valid_login(username, password):
@@ -106,9 +106,9 @@ def ask_get():
 # Con la informacion recibida del formulario, crea una nueva question
 @app.post('/ask')
 def ask_post():
-    title = request.form.get('title', '').strip()
-    body = request.form.get('body', '')
-    categoryname = request.form.get('category', '').strip()
+    title = escape(request.form.get('title', '').strip())
+    body = escape(request.form.get('body', ''))
+    categoryname = escape(request.form.get('category', '').strip())
     
     if not title or not body:
         return render_template('ask.html', error='Todos los campos son obligatorios')
