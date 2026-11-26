@@ -6,10 +6,10 @@ from sqlalchemy import select
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from myapp.database import close_db, get_db, init_db
+from myapp.models.Category import Category
+from myapp.models.Question import Question
 from myapp.models.RoleType import RoleType
 from myapp.models.User import User
-from myapp.models.Question import Question
-from myapp.models.Category import Category
 
 app = Flask(__name__)
 
@@ -111,7 +111,7 @@ def ask_post():
     categoryname = request.form.get('category', '').strip()
     
     if not title or not body:
-        return render_template('ask.html', error='Uno o mas campos obligatorios faltantes')
+        return render_template('ask.html', error='Todos los campos son obligatorios')
 
     db = get_db()
 
@@ -134,29 +134,8 @@ def ask_post():
     db.commit()
     return redirect(url_for('asksuccess'))
 
+# Muestra un mensaje de confirmación cuando la pregunta se publicó
+# correctamente
 @app.route('/asksuccess')
 def asksuccess():
     return render_template('asksuccess.html')
-
-
-# Rutas triviales o auxiliares
-
-@app.route('/user/<username>')
-def show_user_profile(username):
-    return f'User {escape(username)}'
-
-@app.route('/post/<int:post_id>')
-def show_post(post_id):
-    return f'Post {post_id}'
-
-@app.route('/path/<path:subpath>')
-def show_subpath(subpath):
-    return f'Subpath {escape(subpath)}'
-
-@app.route('/projects/')
-def projects():
-    return 'The project page'
-
-@app.route('/about')
-def about():
-    return 'The about page'
